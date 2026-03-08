@@ -1,0 +1,281 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+    ViewData["ActivePage"] = "dashboard";
+}
+
+<div class="mb-3">
+    <h2 class="fw-bold text-dark">Welcome back, @Model.Name!</h2>
+    <p class="text-muted small">Your academic performance by session and term</p>
+</div>
+
+<div class="row g-3">
+    <!-- Left Column - Charts -->
+    <div class="col-lg-8 col-md-8 order-md-1">
+        <!-- Term Performance - Grouped by Session -->
+        <div class="card dashboard-chart-card">
+            <div class="card-header py-2 d-flex justify-content-between align-items-center">
+                <span class="fw-bold">Term Performance by Session</span>
+                <div class="d-flex align-items-center gap-2">
+                    <small class="text-muted">3 terms per session</small>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #003366;"></div>
+                        <span>First Term</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #0288d1;"></div>
+                        <span>Second Term</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #d32f2f;"></div>
+                        <span>Third Term</span>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="sessionPerformanceChart" ></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Annual Cumulative Performance Trend -->
+        <div class="card dashboard-chart-card">
+            <div class="card-header py-2">
+                <span class="fw-bold">Annual Cumulative Performance Trend</span>
+            </div>
+            <div class="card-body">
+                <div class="annual-chart-container">
+                    <canvas id="annualChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="col-lg-4 col-md-4 order-md-2">
+        <div class="card">
+            <div class="card-header bg-primary text-white py-2">
+                <h4 class="fw-bold">Print Terminal Result</h4>
+            </div>
+            <div class="card-body p-2">
+                <form method="post" asp-page-handler="TermResult">
+                    <div class="mb-2">
+                        <div>
+                            <label class="fw-bold small form-label mb-2">Select Term</label>
+                            <select class="form-select form-control" required name="term">
+                                <option selected disabled value="">Choose...</option>
+                                <option value="@(SD.First)">@(SD.First)</option>
+                                <option value="@(SD.Second)">@(SD.Second)</option>
+                                <option value="@(SD.Third)">@(SD.Third)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-2">
+                        <div>
+                            <label class="fw-bold small form-label mb-2">Select Session/Year</label>
+                            <select class="form-select form-control" name="session" asp-items="Model._Session" required>
+                                <option selected disabled value="">Choose...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div>
+                            <label class="fw-bold small form-label mb-2">Select Class</label>
+                            <select class="form-select form-control w-100" name="Classess" asp-items="Model._Class" required>
+                                <option selected disabled>Select clas...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100" formtarget="_blank">
+                        Print Result
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        @if(TempData["error"] != null)
+        {
+            <div class="alert alert-warning alert-dismissible fade show mt-2 mb-2" role="alert">
+                <strong><i class="bi bi-exclamation-triangle me-2"></i></strong> @TempData["error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <div class="card mt-3">
+            <div class="card-header bg-secondary text-white py-2">
+                <h4 class="fw-bold">Print Annual Report</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" asp-page-handler="AnnualResult">
+                    <div class="mb-3">
+                        <div>
+                            <label class="fw-bold small form-label mb-2">Select Session/Year</label>
+                            <select class="form-select custom-select" name="session" asp-items="Model._Session" required>
+                                <option selected disabled value="">Choose...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100" formtarget="_blank">
+                        Print Result
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var sessionLabels = @Html.Raw(Model.SessionLabelsJson);
+            var firstTermData = @Html.Raw(Model.FirstTermScoresJson);
+            var secondTermData = @Html.Raw(Model.SecondTermScoresJson);
+            var thirdTermData = @Html.Raw(Model.ThirdTermScoresJson);
+            var annualData = @Html.Raw(Model.AnnualScoresJson);
+
+            var term1Color = '#003366';
+            var term2Color = '#0288d1';
+            var term3Color = '#d32f2f';
+
+            // ===== Term Performance (Grouped Bar Chart) =====
+            new Chart(document.getElementById('sessionPerformanceChart'), {
+                type: 'bar',
+                data: {
+                    labels: sessionLabels,
+                    datasets: [
+                        {
+                            label: 'First Term',
+                            data: firstTermData,
+                            backgroundColor: term1Color,
+                            borderRadius: 6,
+                            barPercentage: 0.7,
+                            categoryPercentage: 0.8
+                        },
+                        {
+                            label: 'Second Term',
+                            data: secondTermData,
+                            backgroundColor: term2Color,
+                            borderRadius: 6,
+                            barPercentage: 0.7,
+                            categoryPercentage: 0.8
+                        },
+                        {
+                            label: 'Third Term',
+                            data: thirdTermData,
+                            backgroundColor: term3Color,
+                            borderRadius: 6,
+                            barPercentage: 0.7,
+                            categoryPercentage: 0.8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#003366',
+                            titleColor: 'white',
+                            bodyColor: 'white',
+                            cornerRadius: 8,
+                            padding: 10,
+                            callbacks: {
+                                label: function (ctx) {
+                                    return ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#e9ecef' },
+                            title: {
+                                display: true,
+                                text: 'Total Score',
+                                color: '#546e7a',
+                                font: { size: 11, weight: '500' }
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            title: {
+                                display: true,
+                                text: 'Academic Session',
+                                color: '#546e7a',
+                                font: { size: 11, weight: '500' }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // ===== Annual Cumulative Performance (Line Chart) =====
+            new Chart(document.getElementById('annualChart'), {
+                type: 'line',
+                data: {
+                    labels: sessionLabels,
+                    datasets: [{
+                        label: 'Annual Total',
+                        data: annualData,
+                        borderColor: '#003366',
+                        backgroundColor: 'rgba(0, 51, 102, 0.05)',
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#003366',
+                        pointBorderColor: 'white',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#003366',
+                            titleColor: 'white',
+                            bodyColor: 'white',
+                            callbacks: {
+                                label: function (ctx) {
+                                    return 'Annual Total: ' + ctx.parsed.y.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#e9ecef' },
+                            title: {
+                                display: true,
+                                text: 'Cumulative Score',
+                                color: '#546e7a',
+                                font: { size: 11 }
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            title: {
+                                display: true,
+                                text: 'Academic Session',
+                                color: '#546e7a',
+                                font: { size: 11 }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,40 @@
+@page
+@model Bethel_Heritage_Portal_Web.Pages.finance.OtherPaymentsModel
+@{
+    ViewData["Title"] = "Other Payments";
+    ViewData["ActivePage"] = "other-fees";
+}
+@section Styles {
+    <partial name="_dataTablesSheets" />
+}
+
+<div class="card">
+    <div class="card-header d-flex flex-wrap justify-content-between align-items-center">
+        <h5 class="mb-0">Other Payments (Excursion, Uniform, etc.)</h5>
+        <input type="text" id="other-fees-search" class="form-control form-control-sm w-auto" placeholder="Search..." onkeyup="filterTable('other_payment', this.value)">
+    </div>
+    <div class="card-body">
+        <table id="other_payment" class="table table-boredered table-striped table-sm" width="100%">
+            <thead class="">
+                <tr>
+                    <th>#</th>
+                    <th>Full Name</th>
+                    <th>Fees</th>
+                    <th>Paid For</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Session/Year</th>
+                    <th>Term</th>
+                    <th>Class</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+    
+</div>
+@section Scripts {
+    <partial name="_dataTablesScripts" />
+    <script src="~/js/site.js"></script>
+}

@@ -1,0 +1,179 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using TheAgooProjectDataAccess.Data
+@using TheAgooProjectModel
+@inject IConfiguration _config
+@inject ApplicationDbContext _db
+@inject UserManager<ApplicationUser> _userManager
+@{
+
+    var user = await _userManager.GetUserAsync(User);
+    string path = "", name = "";
+    if (user == null)
+    {
+        path = "/images/avata.jpg";
+    }
+    else
+    {
+        var student = _db.StudentTable.FirstOrDefault(k => k.ApplicationUserId == user.Id);
+        if (student != null)
+        {
+            name = student.FirstName;
+            if (string.IsNullOrEmpty(student.Passport))
+            {
+                if (student.Gender == "Male")
+                {
+                    path = "/images/avatar2.png";
+                }
+                else
+                    path = "/images/avata.jpg";
+            }
+            else
+            {
+                path = _config["BaseUrl:url"] + student.Passport;
+            }
+        }
+
+    }
+
+    var activePage = ViewData["ActivePage"] as string ?? "";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] || Bethel Heritage Academy, Makurdi</title>
+    <meta content="Thereturnpark.com" name="domain" />
+    <meta content="D-Best Return Tech" name="Japheth" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="/appicons/favicon.ico">
+
+    <!-- Bootstrap 5 CSS -->
+    @await RenderSectionAsync("Styles", required: false)
+    <link href="~/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <!-- Portal Styles -->
+    <link rel="stylesheet" href="~/css/portal.css" asp-append-version="true" />
+</head>
+<body>
+
+    <!-- Mobile overlay -->
+    <div class="overlay" id="sidebarOverlay"></div>
+
+    <!-- SIDEBAR -->
+    <nav id="sidebar">
+        <div class="logo-area">
+            <img src="~/appicons/ms-icon-310x310.png" alt="School Logo" width="80px">
+            <h5>BETHEL HERITAGE</h5>
+            <small>Student Portal</small>
+        </div>
+
+        <div class="sidebar-scroll-area">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a asp-page="/Index" class="nav-link @(activePage == "dashboard" ? "active" : "")">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-page="/account/profile" class="nav-link @(activePage == "profile" ? "active" : "")">
+                        <i class="bi bi-person-circle"></i> My Profile
+                    </a>
+                </li>
+                <li class="nav-item mt-3">
+                    <span class="text-uppercase text-white-50 fw-bold ps-3" style="font-size: 0.75rem;">Finance</span>
+                </li>
+                <li class="nav-item">
+                    <a asp-page="/finance/SchoolFees" class="nav-link @(activePage == "school-fees" ? "active" : "")">
+                        <i class="bi bi-cash-coin"></i> School Fees
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-page="/finance/PtaPayments" class="nav-link @(activePage == "pta-fees" ? "active" : "")">
+                        <i class="bi bi-people"></i> PTA Payments
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-page="/finance/OtherPayments" class="nav-link @(activePage == "other-fees" ? "active" : "")">
+                        <i class="bi bi-receipt"></i> Other Payments
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="sidebar-footer">
+            <form method="post">
+                <button type="submit" asp-controller="api" asp-action="Logout" class="btn btn-outline-light w-100 btn-sm">
+                    <i class="bi bi-box-arrow-right me-2"></i> Logout
+                </button>
+            </form>            
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main id="main-content">
+
+        <!-- TOP NAVBAR -->
+        <div class="top-navbar">
+            <button class="btn btn-light d-lg-none" id="sidebarToggle">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <div class="d-flex align-items-center ms-auto">
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-decoration-none" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="text-end me-3 d-none d-sm-block">
+                            <div class="fw-bold text-dark" style="font-size: 0.9rem;">@name</div>
+                        </div>
+                        <img src="@path" class="rounded-circle" width="40" height="40" alt="User">
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><h6 class="dropdown-header">My Account</h6></li>
+                        <li><a class="dropdown-item" asp-page="/account/profile">Profile</a></li>
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form method="post">
+                                <button type="submit" asp-controller="api" asp-action="Logout" class="dropdown-item text-danger">
+                                    <i class="bi bi-box-arrow-right me-2"></i> Sign out
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN BODY -->
+        <div id="main-body">
+            @RenderBody()
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="page-footer">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                <div class="mb-2 mb-md-0">
+                    <span class="text-muted small">&copy; @DateTime.UtcNow.Year Bethel Heritage Academy. All rights reserved.</span>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="small text-muted fst-italic">Developed and Manage By: <strong>D-Best Return Tech - </strong><a href="tel:+2348039410863" class="text-decoration-none">08039410863</></span>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+    
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="~/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Portal JS -->
+    <script src="~/js/portal.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

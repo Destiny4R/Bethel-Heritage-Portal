@@ -1,0 +1,79 @@
+﻿@page
+@inject IConfiguration _config
+@model Bethel_Heritage_Portal_Web.Pages.account.profileModel
+@{
+    ViewData["Title"] = "My Profile";
+    ViewData["ActivePage"] = "profile";
+    var path = "";
+    if (string.IsNullOrEmpty(Model.student?.Passport))
+    {
+        if (Model.student.Gender == "Male")
+        {
+            path = "/images/avatar2.png";
+        }
+        else
+            path = "/images/avata.jpg";
+    }
+    else
+    {
+        path = _config["BaseUrl:url"] + Model.student.Passport;
+    }
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-header bg-white py-4 text-center border-0">
+                <img src="@path" class="profile-avatar shadow" alt="Profile" width="300px">
+                <h3 class="fw-bold mb-0">@($"{Model.student.SurName} {Model.student.OtherName} {Model.student.FirstName}")</h3>
+                <p class="text-muted mb-0">Admission No: @(Model.student.StudentRegNo)</p>
+            </div>
+            <div class="card-body pt-0">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <h5 class="text-primary fw-bold mb-3 border-bottom pb-2">
+                            <i class="bi bi-person-lines-fill me-2"></i>Student Information
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-sm-4 text-muted small fw-bold">Full Name:</div>
+                            <div class="col-sm-8">@($"{Model.student.SurName} {Model.student.OtherName} {Model.student.FirstName}")</div>
+                            <div class="col-sm-4 text-muted small fw-bold">Gender:</div>
+                            <div class="col-sm-8">@(Model.student.Gender)</div>
+                            <div class="col-sm-4 text-muted small fw-bold">State:</div>
+                            <div class="col-sm-8">@(Model.student.State)</div>
+                            <div class="col-sm-4 text-muted small fw-bold">Date of Birth:</div>
+                            <div class="col-sm-8">@(Model.student.DateOfBirth.ToShortDateString())</div>
+                            <div class="col-sm-4 text-muted small fw-bold">Local Gov.:</div>
+                            <div class="col-sm-8">@(Model.student.LocalGov)</div>
+                            <div class="col-sm-4 text-muted small fw-bold">Contact Address:</div>
+                            <div class="col-sm-8">@(Model.student.Address)</div>
+                        </div>
+                    </div>
+                    @if (Model.parent?.ParentTable != null)
+                    {
+                        <div class="col-md-6">
+                        <h5 class="text-primary fw-bold mb-3 border-bottom pb-2">
+                            <i class="bi bi-shield-lock-fill me-2"></i>Parent / Guardian
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-sm-4 text-muted small fw-bold">Guardian Name:</div>
+                            <div class="col-sm-8">@(Model.parent.ParentTable.Name)</div>
+                            <div class="col-sm-4 text-muted small fw-bold">Relationship:</div>
+                            <div class="col-sm-8">@(Model.parent.ParentTable.Relationship)</div>
+                            <div class="col-sm-4 text-muted small fw-bold">Occupation:</div>
+                            <div class="col-sm-8">@(Model.parent.ParentTable.Occupation)</div>
+                            <div class="col-sm-4 text-muted small fw-bold">Phone Number:</div>
+                            <div class="col-sm-8">@(Model.parent.ParentTable.PhoneNumber)</div>
+                            <div class="col-sm-4 text-muted small fw-bold">Address:</div>
+                            <div class="col-sm-8">@(Model.parent.ParentTable.Address)</div>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+            <div class="card-footer bg-white text-center border-0">
+                <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-printer me-2"></i>Print Profile</button>
+            </div>
+        </div>
+    </div>
+</div>

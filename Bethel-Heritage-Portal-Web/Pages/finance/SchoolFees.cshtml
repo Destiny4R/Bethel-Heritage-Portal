@@ -1,0 +1,42 @@
+@page
+@model Bethel_Heritage_Portal_Web.Pages.finance.SchoolFeesModel
+@{
+    ViewData["Title"] = "School Fees";
+    ViewData["ActivePage"] = "school-fees";
+}
+@section Styles{
+    <partial name="_dataTablesSheets" />
+}
+
+<div class="card">
+    <div class="card-header d-flex flex-wrap justify-content-between align-items-center">
+        <h5 class="mb-0">School Fees Payment History</h5>
+        <div class="d-flex gap-2">
+            <input type="text" id="school-fees-search" class="form-control form-control-sm" placeholder="Search..." onkeyup="filterTable('school-fees-table', this.value)">
+            <button class="btn btn-primary btn-sm"><i class="bi bi-download"></i> Receipt</button>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="fee_payment" class="table table-boredered table-striped table-sm" width="100%">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Full Name</th>
+                    <th>Fees</th>
+                    <th>Amount</th>
+                    <th>Balance</th>
+                    <th>Status</th>
+                    <th>Session/Year</th>
+                    <th>Term</th>
+                    <th>Class</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+        </table>
+
+    </div>
+</div>
+@section Scripts{
+    <partial name="_dataTablesScripts" />
+    <script src="~/js/site.js"></script>
+}

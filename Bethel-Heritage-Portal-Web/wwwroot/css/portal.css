@@ -1,0 +1,293 @@
+/* ===== Bethel Heritage Portal Styles ===== */
+
+:root {
+    --bs-primary: #003366;
+    --bs-primary-rgb: 0, 51, 102;
+    --bs-secondary: #546e7a;
+    --bs-info: #0288d1;
+    --bs-accent: #d32f2f;
+    --bs-body-bg: #f4f6f9;
+    --sidebar-width: 280px;
+}
+
+/* reset & base */
+html, body {
+    height: 100%;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bs-body-bg);
+    overflow-x: hidden;
+    margin: 0;
+}
+
+/* ===== SIDEBAR ===== */
+#sidebar {
+    width: var(--sidebar-width);
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--bs-primary);
+    color: white;
+    transition: all 0.3s;
+    z-index: 1030;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+#sidebar .logo-area {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    flex-shrink: 0;
+}
+
+#sidebar .logo-area img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid white;
+    margin-bottom: 10px;
+    background: white;
+    object-fit: cover;
+}
+
+#sidebar .logo-area h5 {
+    font-size: 0.9rem;
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+#sidebar .logo-area small {
+    font-size: 0.7rem;
+    opacity: 0.8;
+    display: block;
+    margin-top: 4px;
+}
+
+.sidebar-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 0;
+}
+
+.sidebar-scroll-area::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar-scroll-area::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.2);
+    border-radius: 3px;
+}
+
+#sidebar .nav-link {
+    color: rgba(255,255,255,0.8);
+    padding: 12px 20px;
+    font-weight: 500;
+    border-left: 4px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+#sidebar .nav-link:hover,
+#sidebar .nav-link.active {
+    color: white;
+    background-color: rgba(255,255,255,0.1);
+    border-left-color: var(--bs-accent);
+}
+
+#sidebar .nav-link i {
+    margin-right: 10px;
+    font-size: 1.1rem;
+}
+
+.sidebar-footer {
+    padding: 15px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    flex-shrink: 0;
+}
+
+/* ===== MAIN CONTENT ===== */
+#main-content {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: all 0.3s;
+}
+
+.top-navbar {
+    background: white;
+    padding: 12px 24px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+#main-body {
+    flex: 1 1 auto;
+    padding: 24px;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+/* ===== FOOTER ===== */
+.page-footer {
+    background-color: #ffffff;
+    border-top: 1px solid #e9ecef;
+    padding: 20px 24px;
+    flex-shrink: 0;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.02);
+}
+
+/* ===== CARDS ===== */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    margin-bottom: 20px;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.card-header {
+    background-color: white;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 15px 20px;
+    font-weight: 600;
+    color: var(--bs-primary);
+    border-radius: 12px 12px 0 0 !important;
+}
+
+/* ===== CHARTS ===== */
+.chart-container {
+    position: relative;
+    height: 450px;
+    width: 100%;
+}
+
+.dashboard-chart-card .card-body {
+    padding: 15px;
+}
+
+.annual-chart-container {
+    height: 450px;
+}
+
+.chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+}
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+}
+
+/* ===== QUICK ACTIONS ===== */
+.action-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    text-decoration: none;
+    color: var(--bs-primary);
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.action-item:last-child {
+    margin-bottom: 0;
+}
+
+.action-item:hover {
+    background-color: #f8f9fa;
+    border-color: var(--bs-primary);
+    color: var(--bs-primary);
+}
+
+.action-item i {
+    font-size: 1.2rem;
+    margin-right: 12px;
+    color: var(--bs-info);
+}
+
+/* ===== NOTIFICATIONS ===== */
+.notification-item {
+    padding: 10px 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+/* ===== PROFILE ===== */
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 4px solid white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+/* ===== ANIMATION ===== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 991.98px) {
+    #sidebar {
+        margin-left: calc(-1 * var(--sidebar-width));
+    }
+
+    #sidebar.active {
+        margin-left: 0;
+    }
+
+    #main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 1025;
+    }
+
+    .overlay.active {
+        display: block;
+    }
+}

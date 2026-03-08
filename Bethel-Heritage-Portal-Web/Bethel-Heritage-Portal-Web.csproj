@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Bethel_Heritage_Portal_Web</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="BethelHeritageAcademyDataAccess">
+      <HintPath>..\..\BethelHeritageAcademy\TheAgooProjectDataAccess\bin\Debug\net8.0\BethelHeritageAcademyDataAccess.dll</HintPath>
+    </Reference>
+    <Reference Include="BethelHeritageAcademyModel">
+      <HintPath>..\..\BethelHeritageAcademy\TheAgooProjectDataAccess\bin\Debug\net8.0\BethelHeritageAcademyModel.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.6" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql.Json.Newtonsoft" Version="8.0.1" />
+  </ItemGroup>
+
+</Project>
