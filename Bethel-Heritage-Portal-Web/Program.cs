@@ -37,9 +37,9 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(Options =>
 //builder.Services.AddHostedService<MySqlBackupBackgroundService>();
 builder.Services.ConfigureApplicationCookie(a =>
 {
-    a.LoginPath = $"/Account/Login";
+    a.LoginPath = $"/account/login";
     a.LogoutPath = $"/Account/Logout";
-    a.AccessDeniedPath = $"/Account/AccessDenied";
+    a.AccessDeniedPath = $"/account/accessdenied";
     a.ExpireTimeSpan = TimeSpan.FromDays(1);
     a.SlidingExpiration = true;
 });
